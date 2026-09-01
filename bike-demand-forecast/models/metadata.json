@@ -1,0 +1,31 @@
+{
+    "selected_model": "LightGBM",
+    "selection_metric": "validation_mae",
+    "validation_mae": 33.780153545235365,
+    "validation_rmse": 51.97121712617816,
+    "test_mae": 31.26858339168505,
+    "test_rmse": 50.16400914558891,
+    "candidates": [
+        {
+            "model": "LightGBM",
+            "validation_mae": 33.780153545235365,
+            "validation_rmse": 51.97121712617816,
+            "test_mae": 31.26858339168505,
+            "test_rmse": 50.16400914558891
+        },
+        {
+            "model": "Random Forest",
+            "validation_mae": 40.631927226510136,
+            "validation_rmse": 64.52481901553087,
+            "test_mae": 38.67217533291007,
+            "test_rmse": 63.99172937248036
+        },
+        {
+            "model": "LSTM",
+            "validation_mae": 35.115114124799966,
+            "validation_rmse": 50.73348022758636,
+            "test_mae": 34.38787942912855,
+            "test_rmse": 51.88659846564512
+        }
+    ]
+}
