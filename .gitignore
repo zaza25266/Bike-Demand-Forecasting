@@ -1,0 +1,44 @@
+# Python --------------------------------------------------
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environments ------------------------------------
+.venv/
+venv/
+env/
+
+# Jupyter -------------------------------------------------
+.ipynb_checkpoints/
+
+# OS / editor ---------------------------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+
+# MLflow --------------------------------------------------
+mlruns/
+mlartifacts/
+
+# Large trained models ------------------------------------
+models/*.keras
+models/*.h5
+models/*.pt
+models/*.pth
+models/*.ckpt
+models/*.onnx
+models/*.safetensors
+models/*.bin
+
+# Other large model artifacts
+models/*.pkl
+models/*.joblib
+
+# Keep small metadata/evaluation files --------------------
+!models/metadata.json
+!models/evaluation_results.csv
+!models/features.joblib
+!models/scaler.joblib
+
+# Generated reports / figures -----------------------------
+reports/figures/
