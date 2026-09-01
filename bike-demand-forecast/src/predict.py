@@ -6,7 +6,12 @@ import tensorflow as tf
 from pathlib import Path
 from huggingface_hub import hf_hub_download
 
-from src.config import LSTM_WINDOW
+from src.config import (
+    LSTM_WINDOW,
+    METADATA_PATH,
+    MODEL_DIR,
+    SCALER_PATH,
+)
 from src.features import (
     TREE_FEATURES,
     LSTM_FEATURES,
@@ -15,7 +20,6 @@ from src.features import (
 )
 from src.utils import inverse_transform_target
 
-# Define your Hugging Face repository ID
 REPO_ID = "ZubairAli25266/bike-demand-forecast"
 
 class BikeDemandPredictor:
@@ -26,62 +30,88 @@ class BikeDemandPredictor:
         self.model = self._load_model()
         self.scaler = self._load_scaler()
 
-    # Metadata ----------------------------------
+    def _local_model_path(self, filename):
+        candidate = MODEL_DIR / filename
+        if candidate.exists():
+            return candidate
+        return None
+
     def _load_metadata(self):
-        # Load locally because metadata.json is hosted on GitHub, not Hugging Face
-        BASE_DIR = Path(__file__).resolve().parent.parent
-        METADATA_PATH = BASE_DIR / "models" / "metadata.json"
-        
-        if not METADATA_PATH.exists():
-            raise FileNotFoundError(
-                f"Metadata file not found at {METADATA_PATH}. "
-                "Ensure the 'models' folder is pushed to your GitHub repo."
-            )
-            
-        with open(METADATA_PATH, "r") as f:
-            return json.load(f)
-        
-    # Model ------------------------------
+        base_dir = Path(__file__).resolve().parent
+        metadata_path = base_dir / "models" / "metadata.json"
+
+        if metadata_path.exists():
+            with open(metadata_path, "r") as f:
+                return json.load(f)
+
+        raise FileNotFoundError(
+            f"Metadata file not found at {metadata_path}"
+        )
+
     def _load_model(self):
         if self.model_name == "LightGBM":
+            local_model = self._local_model_path("lightgbm.joblib")
+            if local_model is not None:
+                return joblib.load(local_model)
+
             model_path = hf_hub_download(
-                repo_id=REPO_ID, 
+                repo_id=REPO_ID,
                 filename="lightgbm.joblib"
             )
             return joblib.load(model_path)
 
         if self.model_name == "Random Forest":
+            local_model = self._local_model_path("random_forest.joblib")
+            if local_model is not None:
+                return joblib.load(local_model)
+
             model_path = hf_hub_download(
-                repo_id=REPO_ID, 
+                repo_id=REPO_ID,
                 filename="random_forest.joblib"
             )
             return joblib.load(model_path)
 
         if self.model_name == "LSTM":
+            local_model = self._local_model_path("lstm.keras")
+            if local_model is not None:
+                return tf.keras.models.load_model(local_model)
+
             model_path = hf_hub_download(
-                repo_id=REPO_ID, 
+                repo_id=REPO_ID,
                 filename="lstm.keras"
             )
             return tf.keras.models.load_model(model_path)
 
         raise ValueError(f"Unknown model: {self.model_name}")
 
-    # Scaler ---------------------------
     def _load_scaler(self):
         if self.model_name == "LSTM":
+            if SCALER_PATH.exists():
+                return joblib.load(SCALER_PATH)
+
             try:
                 scaler_path = hf_hub_download(
-                    repo_id=REPO_ID, 
+                    repo_id=REPO_ID,
                     filename="scaler.joblib"
                 )
                 return joblib.load(scaler_path)
             except Exception as e:
-                raise FileNotFoundError(f"LSTM scaler not found on Hugging Face: {e}")
+                raise FileNotFoundError(f"LSTM scaler not found locally or on Hugging Face: {e}")
         return None
 
-    # Tree prediction -----------------------------
     def predict_tree(self, historical_data):
-        df = create_tree_features(historical_data)
+        df = historical_data.copy()
+
+        if set(TREE_FEATURES).issubset(df.columns):
+            feature_df = df[TREE_FEATURES].copy()
+            if feature_df.isna().any().any():
+                raise ValueError(
+                    "Exact LightGBM feature matrix contains missing values."
+                )
+            prediction = self.model.predict(feature_df)
+            return float(prediction[0])
+
+        df = create_tree_features(df)
         latest = df[TREE_FEATURES].iloc[-1:]
 
         if latest.isna().any().any():
