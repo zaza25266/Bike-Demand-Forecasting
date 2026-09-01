@@ -4,6 +4,7 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
+from src.features import TREE_FEATURES, create_tree_features
 from src.predict import BikeDemandPredictor
 
 # Page configuration ---------------------------------------------------------------
@@ -277,10 +278,42 @@ if st.button(
         .sort_index()
     )
 
+    # Build the exact feature row using the same engineered features the
+    # LightGBM model was trained on. This prevents NaN lag/rolling features
+    # from collapsing the model to a constant output.
+    engineered = create_tree_features(prediction_data)
+    feature_row = engineered[TREE_FEATURES].iloc[-1:].copy()
+
+    target_series = historical_data["cnt"] if "cnt" in historical_data.columns else historical_data["target"]
+
+    for lag in [1, 2, 3, 6, 12, 24, 48, 72, 168]:
+        lag_name = f"lag_{lag}"
+        if pd.isna(feature_row[lag_name].iloc[0]):
+            if len(target_series) >= lag:
+                feature_row[lag_name] = float(target_series.iloc[-lag])
+            elif len(target_series) > 0:
+                feature_row[lag_name] = float(target_series.iloc[-1])
+            else:
+                feature_row[lag_name] = 0.0
+
+    for window in [24, 168]:
+        mean_name = f"rolling_mean_{window}"
+        std_name = f"rolling_std_{window}"
+
+        if pd.isna(feature_row[mean_name].iloc[0]):
+            recent = target_series.tail(window)
+            feature_row[mean_name] = float(recent.mean()) if len(recent) else 0.0
+
+        if pd.isna(feature_row[std_name].iloc[0]):
+            recent = target_series.tail(window)
+            feature_row[std_name] = float(recent.std(ddof=0)) if len(recent) > 1 else 0.0
+
+    feature_row = feature_row[TREE_FEATURES].copy().fillna(0.0)
+
     try:
 
         prediction = predictor.predict(
-            prediction_data
+            feature_row
         )
 
         st.success(
