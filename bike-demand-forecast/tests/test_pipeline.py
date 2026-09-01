@@ -21,6 +21,8 @@ from src.model_selection import (
     select_best_model,
 )
 
+from src.predict import BikeDemandPredictor
+
 
 def make_sample_data(rows=300):
 
@@ -217,6 +219,31 @@ def test_metrics():
 
     assert metrics["mae"] > 0
     assert metrics["rmse"] > 0
+
+
+def test_tree_prediction_accepts_exact_training_features():
+
+    class DummyModel:
+        def predict(self, X):
+            assert list(X.columns) == TREE_FEATURES
+            return np.array([42.0])
+
+    predictor = BikeDemandPredictor.__new__(BikeDemandPredictor)
+    predictor.model = DummyModel()
+
+    feature_row = pd.DataFrame(
+        [
+            {
+                feature: float(index)
+                for index, feature in enumerate(TREE_FEATURES)
+            }
+        ],
+        columns=TREE_FEATURES,
+    )
+
+    result = predictor.predict_tree(feature_row)
+
+    assert result == 42.0
 
 
 def test_model_selection():
