@@ -22,10 +22,10 @@
         },
         {
             "model": "LSTM",
-            "validation_mae": 35.115114124799966,
-            "validation_rmse": 50.73348022758636,
-            "test_mae": 34.38787942912855,
-            "test_rmse": 51.88659846564512
+            "validation_mae": 35.34999855705977,
+            "validation_rmse": 50.45923954192711,
+            "test_mae": 34.53756335757133,
+            "test_rmse": 50.88371459171352
         }
     ]
 }
