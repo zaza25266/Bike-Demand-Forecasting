@@ -105,9 +105,7 @@ class BikeDemandPredictor:
         if set(TREE_FEATURES).issubset(df.columns):
             feature_df = df[TREE_FEATURES].copy()
             if feature_df.isna().any().any():
-                raise ValueError(
-                    "Exact LightGBM feature matrix contains missing values."
-                )
+                feature_df = feature_df.fillna(0.0)
             prediction = self.model.predict(feature_df)
             return float(prediction[0])
 
@@ -115,9 +113,7 @@ class BikeDemandPredictor:
         latest = df[TREE_FEATURES].iloc[-1:]
 
         if latest.isna().any().any():
-            raise ValueError(
-                "Not enough historical data to create lag/rolling features."
-            )
+            latest = latest.fillna(0.0)
 
         prediction = self.model.predict(latest)
         return float(prediction[0])
