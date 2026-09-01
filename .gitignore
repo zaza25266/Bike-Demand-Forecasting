@@ -34,6 +34,11 @@ models/*.bin
 models/*.pkl
 models/*.joblib
 
+models/random_forest.joblib
+models/lightgbm.joblib
+models/lstm.keras
+models/scaler.joblib
+
 # Keep small metadata/evaluation files --------------------
 !models/metadata.json
 !models/evaluation_results.csv
