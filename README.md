@@ -1,25 +1,49 @@
-# Bike Demand Forecasting
+# 🚲 Bike Demand Forecasting
 
-An end-to-end hourly bike-demand forecasting project comparing classical time-series forecasting, machine learning, and deep learning approaches.
+An hourly bike-demand forecasting project comparing **classical time-series forecasting, machine learning, and deep learning approaches**.
 
-The project covers data preprocessing, exploratory analysis, statistical analysis, feature engineering, model training, evaluation, MLflow experiment tracking, automated testing, model selection, and a Streamlit prediction application.
+The project focuses on data preprocessing, exploratory analysis, statistical analysis, temporal feature engineering, model training, evaluation, model comparison, experiment tracking, automated testing, and deployment through a Streamlit prediction application.
 
-## Project Overview
+---
 
-The goal is to forecast hourly bike rental demand using historical demand, weather, calendar, and temporal features.
+## 📌 Project Overview
+
+The goal is to forecast **hourly bike rental demand** using historical demand, weather, calendar, and temporal features.
 
 The project compares:
 
 * Classical time-series models
+* Seasonal baseline models
 * Tree-based machine-learning models
 * Deep-learning sequence models
-* Seasonal baseline models
 
-The complete workflow is automated through `run.sh`.
+The overall workflow is:
 
-## Dataset
+```text
+Raw Data
+   ↓
+Data Preprocessing
+   ↓
+EDA & Statistical Analysis
+   ↓
+Feature Engineering
+   ↓
+Model Training
+   ↓
+Model Evaluation
+   ↓
+Model Comparison
+   ↓
+Best Model
+   ↓
+Streamlit Prediction Application
+```
 
-The project uses the **Bike Sharing Dataset** with hourly rental records.
+---
+
+## 📊 Dataset
+
+The project uses the **Bike Sharing Dataset** containing hourly bike rental records.
 
 The prediction target is:
 
@@ -41,9 +65,13 @@ Important variables include:
 * Hour
 * Date/time
 
-## Models
+---
 
-### Classical Time Series
+# 🤖 Models
+
+## Classical Time-Series Models
+
+The following classical forecasting approaches were evaluated:
 
 * Naive
 * Daily Seasonal Naive
@@ -52,19 +80,30 @@ Important variables include:
 * Holt-Winters
 * SARIMAX
 
-### Machine Learning
+## Machine Learning Models
+
+Tree-based models were trained using temporal and historical-demand features:
 
 * Random Forest
 * XGBoost
 * LightGBM
 
-### Deep Learning
+## Deep Learning
+
+A sequence-based:
 
 * LSTM
 
-## Model Performance
+was trained to learn temporal dependencies from historical observations and external variables.
 
-Models were evaluated on the test set using **MAE** and **RMSE**.
+---
+
+# 🏆 Model Performance
+
+Models were evaluated on the test set using:
+
+* **MAE — Mean Absolute Error**
+* **RMSE — Root Mean Squared Error**
 
 Lower values indicate better performance.
 
@@ -81,9 +120,11 @@ Lower values indicate better performance.
 |    9 | SARIMAX (24h, 10 iter) |    395.25 |    437.32 |
 |   10 | Holt-Winters           |    685.31 |    779.45 |
 
-### Best Model
+---
 
-LightGBM achieved the best test-set performance:
+## 🥇 Best Model
+
+**LightGBM** achieved the best test-set performance:
 
 ```text
 MAE  = 33.09
@@ -97,35 +138,50 @@ MAE  = 33.51
 RMSE = 51.69
 ```
 
-Therefore, **LightGBM was selected as the best-performing model** based on the test-set metrics.
+Therefore, **LightGBM was selected as the prediction model** based on the evaluated test-set metrics.
 
-## Feature Engineering
+The small difference between LightGBM and LSTM also shows that a more complex deep-learning model does not automatically provide better forecasting performance.
 
-The machine-learning pipeline creates temporal and historical demand features.
+---
 
-### Calendar Features
+# ⚙️ Feature Engineering
 
-* Hour
-* Day of week
-* Month
-* Day of year
-* Week of year
-* Weekend indicator
+The machine-learning pipeline creates temporal and historical-demand features.
 
-### Cyclical Features
+## Calendar Features
+
+* `hour`
+* `day_of_week`
+* `month`
+* `day_of_year`
+* `week_of_year`
+* `is_weekend`
+
+## Cyclical Features
 
 Daily and weekly periodicity is represented using:
 
-* `hour_sin`
-* `hour_cos`
-* `dow_sin`
-* `dow_cos`
+```text
+hour_sin
+hour_cos
 
-This allows cyclical relationships such as `23 → 0` to be represented more naturally.
+dow_sin
+dow_cos
+```
 
-### Lag Features
+Cyclical encoding allows relationships such as:
 
-Historical demand is used to create:
+```text
+23 → 0
+```
+
+to be represented naturally instead of treating the values as unrelated numerical categories.
+
+---
+
+## Lag Features
+
+Historical demand is used to generate:
 
 ```text
 lag_1
@@ -139,26 +195,43 @@ lag_72
 lag_168
 ```
 
-The `lag_168` feature represents demand from the same hour one week earlier.
+For example:
 
-### Rolling Features
+```text
+lag_24
+```
 
-Historical demand is also used to calculate:
+represents demand from approximately 24 hours earlier.
+
+```text
+lag_168
+```
+
+represents demand from the same hour approximately one week earlier.
+
+---
+
+## Rolling Features
+
+Rolling demand statistics are calculated using:
 
 ```text
 rolling_mean_24
 rolling_std_24
+
 rolling_mean_168
 rolling_std_168
 ```
 
-The rolling calculations are shifted so that the current target value is not used as an input feature.
+The rolling calculations are shifted so that the current target value is not used as an input feature, preventing target leakage.
 
-## LSTM
+---
+
+# 🧠 LSTM
 
 The LSTM uses a sequence-based representation of historical observations.
 
-Its feature set includes:
+Its input features include:
 
 * Historical demand
 * Temperature
@@ -173,22 +246,26 @@ Its feature set includes:
 
 The sequence model learns temporal dependencies from historical observations.
 
-## Data Processing
+---
 
-The preprocessing pipeline:
+# 🧹 Data Processing
 
-1. Loads the raw hourly dataset.
-2. Converts the datetime column into a datetime index.
-3. Sorts observations chronologically.
-4. Restores the complete hourly frequency.
-5. Handles missing observations.
-6. Interpolates continuous variables.
-7. Forward/backward fills appropriate discrete variables.
-8. Saves the processed dataset.
+The preprocessing pipeline performs the following steps:
 
-The resulting processed data is used by the downstream forecasting pipelines.
+1. Load the raw hourly dataset.
+2. Convert the datetime column into a datetime index.
+3. Sort observations chronologically.
+4. Restore the complete hourly frequency.
+5. Identify missing observations.
+6. Interpolate continuous variables.
+7. Forward/backward fill appropriate discrete variables.
+8. Save the processed dataset.
 
-## Project Structure
+The processed dataset is then used by the forecasting pipelines.
+
+---
+
+# 📁 Project Structure
 
 ```text
 bike-demand-forecast/
@@ -203,15 +280,6 @@ bike-demand-forecast/
 │   ├── day.csv
 │   ├── hour.csv
 │   └── hour_cleaned.csv
-│
-├── models/
-│   ├── evaluation_results.csv
-│   ├── features.joblib
-│   ├── lightgbm.joblib
-│   ├── lstm.keras
-│   ├── metadata.json
-│   ├── random_forest.joblib
-│   └── scaler.joblib
 │
 ├── notebooks/
 │   ├── 01_data_preprocessing.ipynb
@@ -237,9 +305,43 @@ bike-demand-forecast/
     └── test_pipeline.py
 ```
 
-## Automated Pipeline
+> **Note:** Trained model files are not stored in this GitHub repository because some model artifacts are too large for GitHub's file-size limits.
 
-The project provides a single command for running the pipeline:
+---
+
+# 🤗 Model Storage
+
+The trained production model is stored on **Hugging Face** rather than inside the GitHub repository.
+
+This keeps the GitHub repository lightweight while allowing the Streamlit application to retrieve the required model artifacts when running.
+
+The prediction flow is:
+
+```text
+Streamlit
+    ↓
+predictor.py
+    ↓
+Hugging Face Hub
+    ↓
+Download trained model
+    ↓
+Load model
+    ↓
+Generate prediction
+    ↓
+Display result
+```
+
+The application does **not** require the trained model to be committed to GitHub.
+
+Instead, `predictor.py` handles downloading/loading the required production artifacts from Hugging Face.
+
+---
+
+# 🔄 Automated Pipeline
+
+The project provides a single command for running the training and evaluation workflow:
 
 ```bash
 ./run.sh
@@ -256,28 +358,31 @@ The pipeline performs:
         ↓
 4. Evaluate models
         ↓
-5. Select the best model
+5. Compare model performance
 ```
 
-The selected model is stored in:
+---
 
-```text
-models/metadata.json
-```
+# 📈 MLflow Experiment Tracking
 
-## MLflow
+**MLflow** is used during model development to track experiments.
 
-MLflow is used for experiment tracking during model development.
+Tracked information includes:
 
-The experiment records model runs and associated parameters, metrics, and artifacts.
+* Model parameters
+* Evaluation metrics
+* Experiment runs
+* Artifacts
 
-The local MLflow tracking directory is intentionally excluded from GitHub because it contains generated experiment artifacts.
+The local MLflow tracking directory is excluded from GitHub because it contains generated experiment files.
 
-## Testing
+---
 
-The project uses Pytest for automated testing.
+# 🧪 Testing
 
-Run all tests:
+The project uses **Pytest** for automated testing.
+
+Run the tests with:
 
 ```bash
 python3 -m pytest
@@ -285,9 +390,11 @@ python3 -m pytest
 
 The test suite validates core feature-engineering and pipeline functionality.
 
-## Streamlit Application
+---
 
-A Streamlit application is provided for interacting with the trained forecasting system.
+# 🚀 Streamlit Application
+
+A Streamlit application provides an interface for generating bike-demand predictions.
 
 Start the application with:
 
@@ -295,66 +402,100 @@ Start the application with:
 python3 -m streamlit run app.py
 ```
 
-The application loads the trained production artifacts and provides a user interface for generating demand predictions.
+The application uses `predictor.py` to retrieve the trained production model from Hugging Face and generate predictions.
 
-## Installation
+```text
+User Input
+    ↓
+Streamlit UI
+    ↓
+predictor.py
+    ↓
+Hugging Face Model
+    ↓
+Prediction
+    ↓
+Streamlit UI
+```
 
-Clone the repository:
+---
+
+# 🛠️ Installation
+
+## 1. Clone the Repository
 
 ```bash
 git clone <repository-url>
 cd bike-demand-forecast
 ```
 
-Create a virtual environment:
+## 2. Create a Virtual Environment
 
 ```bash
 python3 -m venv .venv
+```
+
+Activate it:
+
+```bash
 source .venv/bin/activate
 ```
 
-Install dependencies:
+## 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Make the pipeline executable:
+## 4. Make the Pipeline Executable
 
 ```bash
 chmod +x run.sh
 ```
 
-Run the complete pipeline:
+## 5. Run the Training Pipeline
 
 ```bash
 ./run.sh
 ```
 
-Start the application:
+## 6. Start the Streamlit Application
 
 ```bash
 python3 -m streamlit run app.py
 ```
 
-## Evaluation Strategy
+---
 
-Because this is a time-series forecasting problem, chronological ordering is preserved during dataset splitting.
+# 📏 Evaluation Strategy
 
-The project uses separate training, validation, and test periods rather than randomly shuffling observations.
+Because this is a **time-series forecasting problem**, chronological ordering is preserved during dataset splitting.
+
+The project uses separate:
+
+* Training period
+* Validation period
+* Test period
+
+rather than randomly shuffling observations.
 
 The final models are compared using:
 
-* **MAE — Mean Absolute Error**
-* **RMSE — Root Mean Squared Error**
+### MAE
 
-MAE measures the average absolute prediction error, while RMSE gives greater weight to larger errors.
+**Mean Absolute Error** measures the average absolute difference between predictions and actual values.
 
-## Results and Analysis
+### RMSE
 
-The results show that the machine-learning and deep-learning approaches substantially outperform the simpler classical models on this dataset.
+**Root Mean Squared Error** gives greater weight to larger prediction errors.
 
-The strongest results were obtained by:
+---
+
+# 📊 Results and Analysis
+
+The results show that the machine-learning and deep-learning approaches substantially outperform the simpler classical forecasting approaches on this dataset.
+
+The strongest results were:
 
 ```text
 LightGBM
@@ -374,35 +515,67 @@ MAE  = 42.33
 RMSE = 69.20
 ```
 
-LightGBM achieved the lowest MAE and RMSE across the evaluated models.
+LightGBM achieved the lowest MAE and RMSE among the evaluated models.
 
-The close performance of LightGBM and LSTM also shows that increasing model complexity does not automatically produce a better forecasting result.
+The close performance between LightGBM and LSTM demonstrates that increasing model complexity does not automatically produce better forecasting performance.
 
-## Technologies
+---
+
+# 💡 Key Takeaways
+
+1. **Seasonal baselines provide an important reference point.**
+2. **Classical models such as ARIMA and Holt-Winters performed poorly compared with the feature-based approaches on this dataset.**
+3. **Tree-based models performed strongly after temporal and lag feature engineering.**
+4. **LightGBM achieved the best overall test performance.**
+5. **LSTM achieved nearly identical performance to LightGBM.**
+6. **Chronological evaluation is important for avoiding unrealistic random train/test splits in time-series forecasting.**
+7. **The production model is stored externally on Hugging Face rather than committed to GitHub.**
+
+---
+
+# 🧰 Technologies
+
+### Programming
 
 * Python
+
+### Data Processing
+
 * Pandas
 * NumPy
+
+### Machine Learning
+
 * Scikit-learn
-* Statsmodels
 * XGBoost
 * LightGBM
-* TensorFlow / Keras
+
+### Time Series
+
+* Statsmodels
+
+### Deep Learning
+
+* TensorFlow
+* Keras
+
+### Experiment Tracking
+
 * MLflow
-* Streamlit
+
+### Testing
+
 * Pytest
+
+### Application
+
+* Streamlit
+
+### Model Hosting
+
+* Hugging Face
+
+### Version Control
+
 * Git
 * GitHub
-
-## Key Takeaways
-
-This project demonstrates an end-to-end approach to practical time-series forecasting rather than relying on a single algorithm.
-
-The main findings were:
-
-1. Seasonal baselines provide an important reference point.
-2. Classical models such as ARIMA and Holt-Winters performed poorly compared with the stronger feature-based approaches on this dataset.
-3. Tree-based models performed strongly after temporal and lag feature engineering.
-4. LightGBM achieved the best overall test performance.
-5. LSTM achieved nearly identical performance to LightGBM.
-6. Automated testing, experiment tracking, model evaluation, and model selection were incorporated into the project pipeline.

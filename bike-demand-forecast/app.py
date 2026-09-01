@@ -1,4 +1,3 @@
-
 import json
 from pathlib import Path
 
@@ -6,7 +5,6 @@ import pandas as pd
 import streamlit as st
 
 from src.predict import BikeDemandPredictor
-
 
 # Page configuration ---------------------------------------------------------------
 
@@ -318,4 +316,3 @@ with st.expander("View recent historical data"):
         historical_data.tail(20),
         use_container_width=True,
     )
-

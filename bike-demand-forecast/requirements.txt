@@ -11,3 +11,4 @@ mlflow
 streamlit
 matplotlib
 seaborn
+huggingface_hub
