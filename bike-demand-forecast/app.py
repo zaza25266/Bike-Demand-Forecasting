@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import streamlit as st
 
@@ -255,6 +256,7 @@ if st.button(
             "yr": [
                 forecast_timestamp.year - 2011
             ],
+            "cnt": [np.nan],
         },
         index=[forecast_timestamp],
     )
