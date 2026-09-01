@@ -10,7 +10,7 @@ def resolve_target_column(df):
     for candidate in (TARGET_COLUMN, "target", "cnt"):
         if candidate in df.columns:
             return candidate
-    raise KeyError(f"Target column not found. Expected one of: {TARGET_COLUMN}, 'target', 'cnt'")
+    raise KeyError(f"Target column not found. Expected one of: 'cnt' or 'target'")
 
 
 TREE_FEATURES = [
