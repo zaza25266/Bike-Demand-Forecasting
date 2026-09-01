@@ -29,15 +29,16 @@ class BikeDemandPredictor:
     # Metadata ----------------------------------
     def _load_metadata(self):
         # Load locally because metadata.json is hosted on GitHub, not Hugging Face
-        metadata_path = Path("models/metadata.json")
+        BASE_DIR = Path(__file__).resolve().parent
+        METADATA_PATH = BASE_DIR / "models" / "metadata.json"
         
-        if not metadata_path.exists():
+        if not METADATA_PATH.exists():
             raise FileNotFoundError(
                 f"Metadata file not found at {metadata_path}. "
                 "Ensure the 'models' folder is pushed to your GitHub repo."
             )
             
-        with open(metadata_path, "r") as f:
+        with open(METADATA_PATH, "r") as f:
             return json.load(f)
         
     # Model ------------------------------
