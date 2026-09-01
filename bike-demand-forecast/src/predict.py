@@ -40,7 +40,7 @@ class BikeDemandPredictor:
         return None
 
     def _load_metadata(self):
-        base_dir = Path(__file__).resolve().parent
+        base_dir = Path(__file__).resolve().parent.parent
         metadata_path = base_dir / "models" / "metadata.json"
         if metadata_path.exists():
             with open(metadata_path, "r") as f:
