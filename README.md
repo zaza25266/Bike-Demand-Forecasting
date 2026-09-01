@@ -1,4 +1,4 @@
-# 🚲 Bike Demand Forecasting
+#  Bike Demand Forecasting
 
 An hourly bike-demand forecasting project comparing **classical time-series forecasting, machine learning, and deep learning approaches**.
 
@@ -6,7 +6,7 @@ The project focuses on data preprocessing, exploratory analysis, statistical ana
 
 ---
 
-## 📌 Project Overview
+##  Project Overview
 
 The goal is to forecast **hourly bike rental demand** using historical demand, weather, calendar, and temporal features.
 
@@ -41,7 +41,7 @@ Streamlit Prediction Application
 
 ---
 
-## 📊 Dataset
+##  Dataset
 
 The project uses the **Bike Sharing Dataset** containing hourly bike rental records.
 
@@ -67,7 +67,7 @@ Important variables include:
 
 ---
 
-# 🤖 Models
+#  Models
 
 ## Classical Time-Series Models
 
@@ -98,7 +98,7 @@ was trained to learn temporal dependencies from historical observations and exte
 
 ---
 
-# 🏆 Model Performance
+#  Model Performance
 
 Models were evaluated on the test set using:
 
@@ -109,8 +109,8 @@ Lower values indicate better performance.
 
 | Rank | Model                  |       MAE |      RMSE |
 | ---: | ---------------------- | --------: | --------: |
-| 🥇 1 | **LightGBM**           | **33.09** | **51.20** |
-| 🥈 2 | **LSTM**               | **33.51** | **51.69** |
+|    1 | **LightGBM**           | **33.09** | **51.20** |
+|    2 | **LSTM**               | **33.51** | **51.69** |
 |    3 | Random Forest          |     40.88 |     64.80 |
 |    4 | XGBoost                |     42.33 |     69.20 |
 |    5 | Weekly Seasonal Naive  |     67.95 |    113.95 |
@@ -122,7 +122,7 @@ Lower values indicate better performance.
 
 ---
 
-## 🥇 Best Model
+##  Best Model
 
 **LightGBM** achieved the best test-set performance:
 
@@ -131,7 +131,7 @@ MAE  = 33.09
 RMSE = 51.20
 ```
 
-LSTM was a close second:
+**LSTM** was a close second:
 
 ```text
 MAE  = 33.51
@@ -144,7 +144,7 @@ The small difference between LightGBM and LSTM also shows that a more complex de
 
 ---
 
-# ⚙️ Feature Engineering
+#  Feature Engineering
 
 The machine-learning pipeline creates temporal and historical-demand features.
 
@@ -227,7 +227,7 @@ The rolling calculations are shifted so that the current target value is not use
 
 ---
 
-# 🧠 LSTM
+#  LSTM
 
 The LSTM uses a sequence-based representation of historical observations.
 
@@ -248,7 +248,7 @@ The sequence model learns temporal dependencies from historical observations.
 
 ---
 
-# 🧹 Data Processing
+#  Data Processing
 
 The preprocessing pipeline performs the following steps:
 
@@ -265,7 +265,7 @@ The processed dataset is then used by the forecasting pipelines.
 
 ---
 
-# 📁 Project Structure
+#  Project Structure
 
 ```text
 bike-demand-forecast/
@@ -309,7 +309,7 @@ bike-demand-forecast/
 
 ---
 
-# 🤗 Model Storage
+#  Model Storage
 
 The trained production model is stored on **Hugging Face** rather than inside the GitHub repository.
 
@@ -339,7 +339,7 @@ Instead, `predictor.py` handles downloading/loading the required production arti
 
 ---
 
-# 🔄 Automated Pipeline
+#  Automated Pipeline
 
 The project provides a single command for running the training and evaluation workflow:
 
@@ -363,7 +363,7 @@ The pipeline performs:
 
 ---
 
-# 📈 MLflow Experiment Tracking
+#  MLflow Experiment Tracking
 
 **MLflow** is used during model development to track experiments.
 
@@ -378,7 +378,7 @@ The local MLflow tracking directory is excluded from GitHub because it contains 
 
 ---
 
-# 🧪 Testing
+#  Testing
 
 The project uses **Pytest** for automated testing.
 
@@ -392,7 +392,7 @@ The test suite validates core feature-engineering and pipeline functionality.
 
 ---
 
-# 🚀 Streamlit Application
+#  Streamlit Application
 
 A Streamlit application provides an interface for generating bike-demand predictions.
 
@@ -420,7 +420,7 @@ Streamlit UI
 
 ---
 
-# 🛠️ Installation
+#  Installation
 
 ## 1. Clone the Repository
 
@@ -467,7 +467,7 @@ python3 -m streamlit run app.py
 
 ---
 
-# 📏 Evaluation Strategy
+#  Evaluation Strategy
 
 Because this is a **time-series forecasting problem**, chronological ordering is preserved during dataset splitting.
 
@@ -491,7 +491,7 @@ The final models are compared using:
 
 ---
 
-# 📊 Results and Analysis
+#  Results and Analysis
 
 The results show that the machine-learning and deep-learning approaches substantially outperform the simpler classical forecasting approaches on this dataset.
 
@@ -521,7 +521,7 @@ The close performance between LightGBM and LSTM demonstrates that increasing mod
 
 ---
 
-# 💡 Key Takeaways
+#  Key Takeaways
 
 1. **Seasonal baselines provide an important reference point.**
 2. **Classical models such as ARIMA and Holt-Winters performed poorly compared with the feature-based approaches on this dataset.**
@@ -533,7 +533,7 @@ The close performance between LightGBM and LSTM demonstrates that increasing mod
 
 ---
 
-# 🧰 Technologies
+#  Technologies
 
 ### Programming
 
