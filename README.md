@@ -4,6 +4,7 @@ An hourly bike-demand forecasting project comparing **classical time-series fore
 
 The project focuses on data preprocessing, exploratory analysis, statistical analysis, temporal feature engineering, model training, evaluation, model comparison, experiment tracking, automated testing, and deployment through a Streamlit prediction application.
 
+Live : https://bike-demand-forecasting-yczx6gqvyjgkukr27or4yq.streamlit.app/?
 ---
 
 ##  Project Overview
